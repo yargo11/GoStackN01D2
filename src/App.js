@@ -10,14 +10,15 @@ function App() {
     api.get('repositories').then(response => {
       setRepositories(response.data);
     });
-  }, [repositories]);
+  }, []);
 
 
   async function handleAddRepository() {
 
     const response = await api.post('repositories', {
-      title: `Novo Projeto ${Date.now()}`,
+      id: '789',
       url: 'localhost',
+      title: `Novo Projeto ${Date.now()}`,
       techs: [
         'Tech 1',
         'Tech 2'
@@ -25,18 +26,22 @@ function App() {
     });
 
     const repository = response.data;
+    console.log(repository);
 
     setRepositories([...repositories, repository]);
   }
 
-  async function handleAddLikes(id) {
-    console.log(id);
-    await api.post(`repositories/${id}/like`, {});
-    return '';
-  }
+  // async function handleAddLikes(id) {
+  //   console.log(id);
+  //   await api.post(`repositories/${id}/like`, {});
+  //   return '';
+  // }
 
   async function handleRemoveRepository(id) {
     await api.delete(`repositories/${id}`, {});
+    console.log(id);
+    setRepositories(repositories.filter((repository) => (repository.id !== id )));
+    console.log(repositories);
   }
 
   return (
@@ -44,10 +49,10 @@ function App() {
       <ul data-testid="repository-list">
         <li>
           <ul>
-            {repositories.map(repository => <li key={repository.id} >{repository.title} Likes: {repository.likes}
-              <button onClick={() => handleAddLikes(repository.id)}>
+            {repositories.map(repository => <li key={repository.id} >{repository.title}
+              {/* <button onClick={() => handleAddLikes(repository.id)}>
                 +Likes
-          </button>
+          </button> */}
               <button onClick={() => handleRemoveRepository(repository.id)}>
                 Remover
           </button>
